@@ -1158,7 +1158,7 @@ H.setup_config = function(config)
 		["windows.preview"] = { config.windows.preview, "boolean" },
 		["windows.width_focus"] = { config.windows.width_focus, "number" },
 		["windows.width_nofocus"] = { config.windows.width_nofocus, "number" },
-		["windows.width_preview"] = { config.windows.width_preview, "number" },
+		["windows.width_preview"] = { config.windows.width_preview, "function", 25 },
 	})
 
 	return config
@@ -1778,7 +1778,7 @@ H.compute_visible_depth_range = function(explorer, opts)
 	local width_focus, width_nofocus = opts.windows.width_focus + 2, opts.windows.width_nofocus + 2
 
 	local has_preview = explorer.opts.windows.preview and explorer.depth_focus < #explorer.branch
-	local width_preview = has_preview and (opts.windows.width_preview + 2) or width_nofocus
+	local width_preview = has_preview and (opts.windows.width_preview() + 2) or width_nofocus
 
 	local max_number = 1
 	if (width_focus + width_preview) <= vim.o.columns then
