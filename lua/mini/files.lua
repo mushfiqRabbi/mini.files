@@ -1576,7 +1576,7 @@ H.explorer_refresh_depth_window = function(explorer, depth, win_count, win_col)
 	local win_is_focused = depth == explorer.depth_focus
 	local win_is_preview = opts.windows.preview and (depth == (explorer.depth_focus + 1))
 	local cur_width = win_is_focused and opts.windows.width_focus
-		or (win_is_preview and opts.windows.width_preview or opts.windows.width_nofocus)
+		or (win_is_preview and opts.windows.width_preview() or opts.windows.width_nofocus)
 
 	-- Create relevant window config
 	local config = {
