@@ -627,7 +627,7 @@ MiniFiles.config = {
     -- Whether to show preview of file/directory under cursor
     preview = false,
     -- Width of focused window
-    width_focus = 50,
+    width_focus = 40,
     -- Width of non-focused window
     width_nofocus = 15,
     -- Width of preview window
@@ -1156,7 +1156,7 @@ H.setup_config = function(config)
 
 		["windows.max_number"] = { config.windows.max_number, "number" },
 		["windows.preview"] = { config.windows.preview, "boolean" },
-		["windows.width_focus"] = { config.windows.width_focus, "number" },
+		["windows.width_focus"] = { config.windows.width_focus, "function", 40 },
 		["windows.width_nofocus"] = { config.windows.width_nofocus, "number" },
 		["windows.width_preview"] = { config.windows.width_preview, "function", 25 },
 	})
@@ -1575,7 +1575,7 @@ H.explorer_refresh_depth_window = function(explorer, depth, win_count, win_col)
 	-- Compute width based on window role
 	local win_is_focused = depth == explorer.depth_focus
 	local win_is_preview = opts.windows.preview and (depth == (explorer.depth_focus + 1))
-	local cur_width = win_is_focused and opts.windows.width_focus
+	local cur_width = win_is_focused and opts.windows.width_focus()
 		or (win_is_preview and opts.windows.width_preview() or opts.windows.width_nofocus)
 
 	-- Create relevant window config
@@ -1775,10 +1775,10 @@ end
 H.compute_visible_depth_range = function(explorer, opts)
 	-- Compute maximum number of windows possible to fit in current Neovim width
 	-- Add 2 to widths to take into account width of left and right borders
-	local width_focus, width_nofocus = opts.windows.width_focus + 2, opts.windows.width_nofocus + 2
+	local width_focus, width_nofocus = opts.windows.width_focus(), opts.windows.width_nofocus + 2
 
 	local has_preview = explorer.opts.windows.preview and explorer.depth_focus < #explorer.branch
-	local width_preview = has_preview and (opts.windows.width_preview() + 2) or width_nofocus
+	local width_preview = has_preview and (opts.windows.width_preview()) or width_nofocus
 
 	local max_number = 1
 	if (width_focus + width_preview) <= vim.o.columns then
